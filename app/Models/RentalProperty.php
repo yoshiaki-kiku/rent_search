@@ -8,6 +8,6 @@ class RentalProperty extends Model
 {
     public function RentalPropertyOptions()
     {
-        return $this->belongsToMany('App\Models\RentalPropertyOptions', "property_option");
+        return $this->belongsToMany('App\Models\RentalPropertyOption', "property_option");
     }
 }
