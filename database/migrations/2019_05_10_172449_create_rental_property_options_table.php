@@ -15,6 +15,9 @@ class CreateRentalPropertyOptionsTable extends Migration
     {
         Schema::create('rental_property_options', function (Blueprint $table) {
             $table->bigIncrements('id');
+            // バス・トイレ別、エアコン
+            // 駐車場あり、など細かい条件のリスト
+            $table->string("option_name");
             $table->timestamps();
         });
     }

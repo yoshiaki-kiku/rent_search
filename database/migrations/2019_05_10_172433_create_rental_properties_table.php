@@ -15,6 +15,11 @@ class CreateRentalPropertiesTable extends Migration
     {
         Schema::create('rental_properties', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('adress');     // 住所
+            $table->string('area');       // 地域
+            $table->integer('rent');      // 賃料
+            $table->string('floor_plan'); // 間取り
+            $table->integer('age');       // 築年数
             $table->timestamps();
         });
     }

@@ -6,5 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RentalProperty extends Model
 {
-    //
+    public function RentalPropertyOptions()
+    {
+        return $this->belongsToMany('App\Models\RentalPropertyOptions', "property_option");
+    }
 }
