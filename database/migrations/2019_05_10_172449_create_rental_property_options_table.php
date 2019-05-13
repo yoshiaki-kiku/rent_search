@@ -17,7 +17,7 @@ class CreateRentalPropertyOptionsTable extends Migration
             $table->bigIncrements('id');
             // バス・トイレ別、エアコン
             // 駐車場あり、など細かい条件のリスト
-            $table->string("option_name");
+            $table->string("name");
             $table->timestamps();
         });
     }

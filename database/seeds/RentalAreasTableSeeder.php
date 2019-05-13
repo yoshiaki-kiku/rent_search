@@ -27,7 +27,7 @@ class RentalAreasTableSeeder extends Seeder
 
         foreach ($areas as $value) {
             RentalArea::create([
-                "area_name" => $value,
+                "name" => $value,
             ]);
         }
     }

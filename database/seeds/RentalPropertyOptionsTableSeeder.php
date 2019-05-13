@@ -26,7 +26,7 @@ class RentalPropertyOptionsTableSeeder extends Seeder
 
         foreach ($options as $value) {
             RentalPropertyOption::create([
-                "option_name" => $value,
+                "name" => $value,
             ]);
         }
     }

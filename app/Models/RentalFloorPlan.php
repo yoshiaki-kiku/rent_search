@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RentalFloorPlans extends Model
+class RentalFloorPlan extends Model
 {
     public function RentalProperties()
     {

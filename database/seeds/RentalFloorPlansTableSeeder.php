@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\RentalFloorPlans;
+use App\Models\RentalFloorPlan;
 
 class RentalFloorPlansTableSeeder extends Seeder
 {
@@ -28,8 +28,8 @@ class RentalFloorPlansTableSeeder extends Seeder
         ];
 
         foreach ($floorPlans as $value) {
-            RentalFloorPlans::create([
-                "floor_plan_name" => $value,
+            RentalFloorPlan::create([
+                "name" => $value,
             ]);
         }
     }

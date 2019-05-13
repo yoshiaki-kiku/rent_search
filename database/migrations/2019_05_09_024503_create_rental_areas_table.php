@@ -15,7 +15,7 @@ class CreateRentalAreasTable extends Migration
     {
         Schema::create('rental_areas', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string("area_name");
+            $table->string("name");
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ class CreateRentalFloorPlansTable extends Migration
     {
         Schema::create('rental_floor_plans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string("floor_plan_name");
+            $table->string("name");
             $table->timestamps();
         });
     }
