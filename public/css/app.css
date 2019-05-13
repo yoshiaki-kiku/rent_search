@@ -10667,3 +10667,12 @@ body {
   padding-top: 70px;
 }
 
+.my-bg-secondary {
+  background-color: #eff4f5;
+}
+
+.my-border td,
+.my-border th {
+  border: 3px solid #bec8ca;
+}
+
