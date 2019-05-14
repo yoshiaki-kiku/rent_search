@@ -23,7 +23,7 @@
                         class="form-check-label"
                         :for="'rentalArea' + rentalArea.id"
                     >
-                        {{ rentalArea.name }}
+                        {{ rentalArea.name }} ({{ areaPropertyCount[rentalArea.id] }})
                     </label>
                 </li>
             </ul>
@@ -170,15 +170,22 @@
 <script>
 export default {
     props: {
+        initAreaPropertyCount: Object,
         initRentalAreas: Array,
         initRentalFloorPlans: Array,
         initRentalPropertyOptions: Array
     },
     data: function() {
         return {
+            // 地域ごとの物件数
+            areaPropertyCount: this.initAreaPropertyCount,
+            // 地域
             rentalAreas: this.initRentalAreas,
+            // 間取り
             rentalFloorPlans: this.initRentalFloorPlans,
+            // 物件の細かい条件
             rentalPropertyOptions: this.initRentalPropertyOptions,
+            // 賃料の上限下限
             rentUpperLimit: 50,
             rentLowerLimit: 3,
             // 築年数
@@ -245,7 +252,8 @@ export default {
     },
 
     mounted() {
-        console.log(this.rentalPropertyOptions);
+        console.log(this.areaPropertyCount[1]);
+        console.log(this.rentalAreas);
     }
 };
 </script>

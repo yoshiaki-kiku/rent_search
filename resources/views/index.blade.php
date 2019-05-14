@@ -10,6 +10,7 @@
 </div>
 
 <rent-search-form-component
+    v-bind:init-area-property-count="{{ $areaPropertyCount }}"
     v-bind:init-rental-floor-plans="{{ $rentalFloorPlans }}"
     v-bind:init-rental-areas="{{ $rentalAreas }}"
     v-bind:init-rental-property-options="{{ $rentalPropertyOptions }}">
