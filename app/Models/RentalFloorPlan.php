@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RentalFloorPlan extends Model
 {
-    public function RentalProperties()
+    public function rentalProperties()
     {
         return $this->hasMany('App\Models\RentalProperty');
     }

@@ -12,3 +12,4 @@
 */
 
 Route::get('/', "RentSearchController@index")->name("home");
+Route::post('/property_count', "RentSearchController@propertyCount")->name("property.count");

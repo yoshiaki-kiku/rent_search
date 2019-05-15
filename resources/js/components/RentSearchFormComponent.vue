@@ -16,7 +16,7 @@
                         name="rental_area"
                         :value="rentalArea.id"
                         class="form-check-input"
-                        v-model="searchValues.areas"
+                        v-model="searchValues.area"
                         :id="'rentalArea' + rentalArea.id"
                     >
                     <label
@@ -35,8 +35,8 @@
                         <td class="py-0 pt-3">
                             <div class="form-group row mx-3">
                                 <select
-                                    name="rent1"
-                                    v-model="searchValues.rent1"
+                                    name="rent_lower_limit"
+                                    v-model="searchValues.rent_lower_limit"
                                     class="form-control col-4"
                                 >
                                     <option
@@ -51,8 +51,8 @@
                                     ～
                                 </div>
                                 <select
-                                    name="rent2"
-                                    v-model="searchValues.rent2"
+                                    name="rent_upper_limit"
+                                    v-model="searchValues.rent_upper_limit"
                                     class="form-control col-4"
                                 >
                                     <option
@@ -79,7 +79,7 @@
                                         type="checkbox"
                                         name="floor_plan"
                                         :value="rentalFloorPlan.id"
-                                        v-model="searchValues.floorPlans"
+                                        v-model="searchValues.floor_plan"
                                         class="form-check-input"
                                         :id="'rentalFloorPlan' + rentalFloorPlan.id"
                                     >
@@ -131,11 +131,11 @@
                                 >
                                     <input
                                         type="checkbox"
-                                        name="options"
+                                        name="option"
                                         :value="option.id"
                                         class="form-check-input"
                                         :id="'option' + option.id"
-                                        v-model="searchValues.options"
+                                        v-model="searchValues.option"
                                     >
                                     <label
                                         class="form-check-label"
@@ -168,6 +168,8 @@
 </style>
 
 <script>
+import axios from "axios";
+
 export default {
     props: {
         initAreaPropertyCount: Object,
@@ -200,13 +202,15 @@ export default {
                 "25年以内": 25,
                 "30年以内": 30
             },
+            // formのnameと同じ命名にするため
+            // ケバブケースを利用
             searchValues: {
-                areas: [],
-                rent1: null,
-                rent2: null,
-                floorPlans: [],
+                area: [],
+                rent_lower_limit: null,
+                rent_upper_limit: null,
+                floor_plan: [],
                 age: null,
-                options: []
+                option: []
             }
         };
     },
@@ -244,8 +248,14 @@ export default {
     },
     watch: {
         searchValues: {
-            handler: function() {
-                console.log(this.searchValues.options);
+            handler: async function() {
+                const response = await axios.post(
+                    "/property_count",
+                    this.searchValues
+                );
+
+                console.log(response);
+                // console.log(this.searchValues.options);
             },
             deep: true
         }
