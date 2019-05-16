@@ -127,9 +127,39 @@ class RentalProperty extends Model
             }
         }
 
-        Log::debug($query->toSql());
-        Log::debug($query->count());
-
         return $query;
+    }
+
+    /**
+     * 各種条件で取得した結果をサブクエリとして
+     * オプションIDに該当する賃貸物件の数を取得する
+     *
+     * @param $subQuery
+     * @return void
+     */
+    public function getOptionCount($subQuery)
+    {
+        $query = DB::table(DB::raw('(' . $subQuery->toSql() . ') as sub'))
+            ->mergeBindings($subQuery->getQuery());
+
+        $RentalPropertyOptions = RentalPropertyOption::get("id");
+        foreach ($RentalPropertyOptions as $option) {
+            $name = "id_" .  $option->id;
+            $query->selectRaw(
+                "COUNT(find_in_set(? ,option_list) or null) as {$name}",
+                [$option->id]
+            );
+        }
+
+        // 利用しやすいようにキーを調整して配列を整える
+        $counts = [];
+        $gets = $query->first();
+        $gets = json_decode(json_encode($gets), true);
+        foreach ($gets as  $key => $value) {
+            $key = str_replace("id_", "", $key);
+            $counts[$key] = $value;
+        }
+
+        return $counts;
     }
 }
