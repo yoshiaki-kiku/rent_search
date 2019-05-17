@@ -18,11 +18,11 @@
                             :value="rentalArea.id"
                             class="form-check-input"
                             v-model="searchValues.area"
-                            :id="'rentalArea' + rentalArea.id"
+                            :id="'rental_area' + rentalArea.id"
                         >
                         <label
                             class="form-check-label"
-                            :for="'rentalArea' + rentalArea.id"
+                            :for="'rental_area' + rentalArea.id"
                         >
                             {{ rentalArea.name }} ({{ areaPropertyCount[rentalArea.id] }})
                         </label>
@@ -39,6 +39,7 @@
                                         name="rent_lower_limit"
                                         v-model="searchValues.rent_lower_limit"
                                         class="form-control col-4"
+                                        :disabled="nextStep"
                                     >
                                         <option
                                             v-for="(rent, key, index) in rentArr"
@@ -55,6 +56,7 @@
                                         name="rent_upper_limit"
                                         v-model="searchValues.rent_upper_limit"
                                         class="form-control col-4"
+                                        :disabled="nextStep"
                                     >
                                         <option
                                             v-for="(rent, key, index) in rentArr"
@@ -83,6 +85,7 @@
                                             v-model="searchValues.floor_plan"
                                             class="form-check-input"
                                             :id="'rentalFloorPlan' + rentalFloorPlan.id"
+                                            :disabled="nextStep"
                                         >
                                         <label
                                             class="form-check-label"
@@ -110,6 +113,7 @@
                                             :id="'age' + index"
                                             :value="age"
                                             v-model="searchValues.age"
+                                            :disabled="nextStep"
                                         >
                                         <label
                                             class="form-check-label"
@@ -137,6 +141,7 @@
                                             class="form-check-input"
                                             :id="'option' + option.id"
                                             v-model="searchValues.option"
+                                            :disabled="nextStep"
                                         >
                                         <label
                                             class="form-check-label"
@@ -186,7 +191,6 @@
 
 <script>
 import axios from "axios";
-import { log } from "util";
 
 export default {
     props: {
@@ -233,7 +237,10 @@ export default {
             // 該当物件数
             propertyCount: "--",
             // オプションの該当件数
-            optionCounts: []
+            optionCounts: [],
+            // フォームの有効無効
+            // 地域未選択時に他フォームを無効化するための変数
+            nextStep: true
         };
     },
     computed: {
@@ -269,6 +276,20 @@ export default {
         }
     },
     watch: {
+        "searchValues.area": function() {
+            //rental_area
+            //rent_lower_limit
+            //rent_upper_limit
+            //floor_plan
+            //age
+            //option
+            // 地域の選択がなければ、条件の選択ができないように設定
+            if (this.searchValues.area.length > 0) {
+                this.nextStep = false;
+            } else {
+                this.nextStep = true;
+            }
+        },
         searchValues: {
             handler: async function() {
                 const response = await axios.post(
@@ -334,8 +355,7 @@ export default {
     },
 
     mounted() {
-        console.log(this.areaPropertyCount[1]);
-        console.log(this.rentalAreas);
+        console.log(this.formDisables);
     }
 };
 </script>
