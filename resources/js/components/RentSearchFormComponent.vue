@@ -1,11 +1,7 @@
 <template>
     <div>
-        <div class="container mb-3 p-2 text-center sticky-top bg-success my-min-width">
-            <span class="text-white">
-                該当物件
-                <span class="count-num">{{ propertyCount }}</span>
-                件
-            </span>
+        <div class="property-count container mb-3 p-2 text-center sticky-top my-min-width">
+            該当物件 <span class="count-num">{{ propertyCount }}</span> 件
         </div>
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form>
@@ -174,9 +170,16 @@
 .my-min-width {
     min-width: 768px;
 }
+.property-count {
+    background-color: #cae7f2;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 1px solid #208dc3;
+}
 .count-num {
     padding: 0px 6px;
-    font-size: 1.6em;
+    font-size: 1.5em;
+    color: #da5019;
     font-family: "Roboto Mono", monospace;
 }
 </style>

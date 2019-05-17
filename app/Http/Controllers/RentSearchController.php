@@ -33,6 +33,8 @@ class RentSearchController extends Controller
     }
 
     /**
+     * 非同期、検索条件による物件数の取得
+     *
      * @param PropertyCount $request
      * @return void
      */
