@@ -46,10 +46,9 @@ class RentSearchController extends Controller
         // 現在条件の各オプションに該当する物件数
         $optionCounts = $rentalPropertyModel->getOptionCount($query);
 
-        Log::debug($count);
-        Log::debug($optionCounts);
-
-        $a = "デバッグ";
-        die(json_encode($request, true));
+        return [
+            "propertyCount" => $count,
+            "optionCounts" => $optionCounts
+        ];
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('content')
-<nav class="navbar fixed-top navbar-dark bg-secondary">
+<nav class="navbar navbar-dark bg-secondary">
     <a class="navbar-brand" href="#!">賃貸検索</a>
 </nav>
 
