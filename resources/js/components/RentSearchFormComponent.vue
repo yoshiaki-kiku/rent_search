@@ -141,13 +141,13 @@
                                             class="form-check-input"
                                             :id="'option' + option.id"
                                             v-model="searchValues.option"
-                                            :disabled="nextStep"
+                                            :disabled="optionDisableCheck(nextStep, optionDisable[option.id])"
                                         >
                                         <label
                                             class="form-check-label"
                                             :for="'option' + option.id"
                                         >
-                                            {{ option.name }} ({{ optionCounts[option.id] ? optionCounts[option.id] : '--'}})
+                                            {{ option.name }} ({{ optionCounts[option.id] != null ? optionCounts[option.id] : '--'}})
                                         </label>
                                     </li>
                                 </ul>
@@ -240,7 +240,9 @@ export default {
             optionCounts: [],
             // フォームの有効無効
             // 地域未選択時に他フォームを無効化するための変数
-            nextStep: true
+            nextStep: true,
+            // オプションが持つ該当物件がなければチェックボタンを無効化する
+            optionDisable: []
         };
     },
     computed: {
@@ -277,12 +279,6 @@ export default {
     },
     watch: {
         "searchValues.area": function() {
-            //rental_area
-            //rent_lower_limit
-            //rent_upper_limit
-            //floor_plan
-            //age
-            //option
             // 地域の選択がなければ、条件の選択ができないように設定
             if (this.searchValues.area.length > 0) {
                 this.nextStep = false;
@@ -307,8 +303,17 @@ export default {
                 // 該当物件のカウントを上下させる
                 this.countUpDown(this.propertyCount, _propertyCount);
 
-                Object.keys(_optionCounts).forEach(key => {
-                    this.optionCounts[key] = _optionCounts[key];
+                // オプションの該当件数を更新
+                // 0件の場合はボタンの無効化
+                Object.keys(this.rentalPropertyOptions).forEach(key => {
+                    let optionId = this.rentalPropertyOptions[key].id;
+                    if (!_optionCounts[optionId]) {
+                        this.optionCounts[optionId] = 0;
+                        this.optionDisable[optionId] = true;
+                    } else {
+                        this.optionCounts[optionId] = _optionCounts[optionId];
+                        this.optionDisable[optionId] = false;
+                    }
                 });
             },
             deep: true
@@ -351,11 +356,34 @@ export default {
                 }
                 // intervalの数値を大きくすれば緩やかな見え方になる
             }, 16);
+        },
+
+        // オプション項目のフォームを無効を切り替える
+        allOptionDisable: function() {
+            Object.keys(this.rentalPropertyOptions).forEach(key => {
+                let optionId = this.rentalPropertyOptions[key].id;
+                this.optionDisable[optionId] = true;
+            });
+        },
+
+        // オプションフォームの有効無効を判定する
+        optionDisableCheck: function(nextStep, optionDisable) {
+            let flag;
+            if (nextStep) {
+                flag = true;
+            } else {
+                flag = optionDisable ? true : false;
+            }
+            return flag;
         }
     },
 
+    created() {
+        this.allOptionDisable();
+    },
+
     mounted() {
-        console.log(this.formDisables);
+        console.log(this.rentalPropertyOptions);
     }
 };
 </script>
