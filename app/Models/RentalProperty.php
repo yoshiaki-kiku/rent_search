@@ -22,17 +22,19 @@ class RentalProperty extends Model
      */
     public function getAreaPropertyCount()
     {
-        $areaPropertyCountArr = [];
-        $rentalProperty = RentalProperty::all();
-        foreach ($rentalProperty as $value) {
-            if (!empty($areaPropertyCountArr[$value->area])) {
-                $areaPropertyCountArr[$value->area] += 1;
-            } else {
-                $areaPropertyCountArr[$value->area] = 1;
-            }
+        $areaCounts = [];
+
+        $getArr = RentalProperty::query()->select(
+            "area",
+            DB::raw("count(*) as area_count")
+        )->groupBy("area")->get();
+
+        foreach ($getArr as $value) {
+            Log::debug($value->area);
+            $areaCounts[$value->area] = $value->area_count;
         }
 
-        return collect($areaPropertyCountArr);
+        return collect($areaCounts);
     }
 
     /**

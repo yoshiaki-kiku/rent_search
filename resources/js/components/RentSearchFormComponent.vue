@@ -203,6 +203,7 @@
     color: #fff;
     padding: 4px 10px 4px 10px;
 }
+
 .step-header h2 {
     margin: 0px;
     padding: 3px 0px 0px 10px;
