@@ -5,7 +5,10 @@
         </div>
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form>
-                <h2>地域の選択</h2>
+                <div class="d-flex align-items-center step-header">
+                    <div>ステップ1</div>
+                    <h2>地域の選択</h2>
+                </div>
                 <ul class="row">
                     <li
                         class="col-3 form-group form-check"
@@ -28,7 +31,10 @@
                         </label>
                     </li>
                 </ul>
-                <h2>条件の選択</h2>
+                <div class="d-flex align-items-center step-header">
+                    <div>ステップ2</div>
+                    <h2>条件の指定</h2>
+                </div>
                 <table class="table table-bordered my-border">
                     <tbody>
                         <tr>
@@ -180,12 +186,26 @@
     font-weight: bold;
     font-size: 1.2em;
     border: 1px solid #208dc3;
+    color: #666;
 }
 .count-num {
     padding: 0px 6px;
     font-size: 1.5em;
     color: #da5019;
     font-family: "Roboto Mono", monospace;
+}
+.step-header {
+    margin-bottom: 10px;
+}
+.step-header div {
+    background-color: #a3a3a3;
+    font-size: 1.2em;
+    color: #fff;
+    padding: 6px 10px 6px 10px;
+}
+.step-header h2 {
+    margin: 0px;
+    padding: 3px 0px 0px 10px;
 }
 </style>
 
