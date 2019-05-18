@@ -201,7 +201,7 @@
     background-color: #a3a3a3;
     font-size: 1.2em;
     color: #fff;
-    padding: 6px 10px 6px 10px;
+    padding: 4px 10px 4px 10px;
 }
 .step-header h2 {
     margin: 0px;
