@@ -308,6 +308,12 @@ export default {
         },
         searchValues: {
             handler: async function() {
+                // 地域未選択時は処理しない
+                if (this.searchValues.area.length < 1) {
+                    this.propertyCount = "--";
+                    return;
+                }
+
                 try {
                     const response = await axios.post(
                         "/property_count",
