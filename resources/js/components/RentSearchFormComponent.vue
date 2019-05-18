@@ -288,33 +288,38 @@ export default {
         },
         searchValues: {
             handler: async function() {
-                const response = await axios.post(
-                    "/property_count",
-                    this.searchValues
-                );
+                try {
+                    const response = await axios.post(
+                        "/property_count",
+                        this.searchValues
+                    );
 
-                let _propertyCount = response.data.propertyCount;
-                let _optionCounts = response.data.optionCounts;
+                    let _propertyCount = response.data.propertyCount;
+                    let _optionCounts = response.data.optionCounts;
 
-                if (this.propertyCount == "--") {
-                    this.propertyCount = 0;
-                }
-
-                // 該当物件のカウントを上下させる
-                this.countUpDown(this.propertyCount, _propertyCount);
-
-                // オプションの該当件数を更新
-                // 0件の場合はボタンの無効化
-                Object.keys(this.rentalPropertyOptions).forEach(key => {
-                    let optionId = this.rentalPropertyOptions[key].id;
-                    if (!_optionCounts[optionId]) {
-                        this.optionCounts[optionId] = 0;
-                        this.optionDisable[optionId] = true;
-                    } else {
-                        this.optionCounts[optionId] = _optionCounts[optionId];
-                        this.optionDisable[optionId] = false;
+                    if (this.propertyCount == "--") {
+                        this.propertyCount = 0;
                     }
-                });
+
+                    // 該当物件のカウントを上下させる
+                    this.countUpDown(this.propertyCount, _propertyCount);
+
+                    // オプションの該当件数を更新
+                    // 0件の場合はボタンの無効化
+                    Object.keys(this.rentalPropertyOptions).forEach(key => {
+                        let optionId = this.rentalPropertyOptions[key].id;
+                        if (!_optionCounts[optionId]) {
+                            this.optionCounts[optionId] = 0;
+                            this.optionDisable[optionId] = true;
+                        } else {
+                            this.optionCounts[optionId] =
+                                _optionCounts[optionId];
+                            this.optionDisable[optionId] = false;
+                        }
+                    });
+                } catch (error) {
+                    console.log(error.response);
+                }
             },
             deep: true
         }

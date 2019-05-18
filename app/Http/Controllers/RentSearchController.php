@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\RentalArea;
 use App\Models\RentalFloorPlan;
 use App\Models\RentalPropertyOption;
 use App\Models\RentalProperty;
-use App\Http\Requests\PropertyCount;
+use App\Http\Requests\RentSearch;
 use Log;
+
 
 class RentSearchController extends Controller
 {
@@ -38,8 +38,10 @@ class RentSearchController extends Controller
      * @param PropertyCount $request
      * @return void
      */
-    public function propertyCount(PropertyCount $request)
+    public function propertyCount(RentSearch $request)
     {
+        Log::debug($request);
+
         $rentalPropertyModel = new RentalProperty();
         $query = $rentalPropertyModel->getPropertyQueryBuild($request);
 
