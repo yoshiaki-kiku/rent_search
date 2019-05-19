@@ -6,8 +6,8 @@
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form>
                 <div class="d-flex align-items-center step-header">
-                    <div>ステップ1</div>
-                    <h2>地域の選択</h2>
+                    <div :class="step1ActiveCheck">ステップ1</div>
+                    <h2>地域の選択 <span>(複数選択可)</span></h2>
                 </div>
                 <ul class="row">
                     <li
@@ -32,7 +32,7 @@
                     </li>
                 </ul>
                 <div class="d-flex align-items-center step-header">
-                    <div>ステップ2</div>
+                    <div :class="step2ActiveCheck">ステップ2</div>
                     <h2>条件の指定</h2>
                 </div>
                 <table class="table table-bordered my-border">
@@ -198,15 +198,25 @@
     margin-bottom: 10px;
 }
 .step-header div {
-    background-color: #a3a3a3;
     font-size: 1.2em;
     color: #fff;
     padding: 4px 10px 4px 10px;
 }
 
+.step-header-active {
+    background-color: #a0d3e8;
+}
+
+.step-header-nonactive {
+    background-color: #a3a3a3;
+}
+
 .step-header h2 {
     margin: 0px;
     padding: 3px 0px 0px 10px;
+}
+.step-header h2 span {
+    font-size: 0.5em;
 }
 </style>
 
@@ -263,42 +273,15 @@ export default {
             // 地域未選択時に他フォームを無効化するための変数
             nextStep: true,
             // オプションが持つ該当物件がなければチェックボタンを無効化する
-            optionDisable: []
+            optionDisable: [],
+            classStepHeaderFlag: {
+                active: "step-header-active",
+                nonActive: "step-header-nonactive"
+            }
         };
     },
-    computed: {
-        // 賃料選択の配列を作成
-        rentArr: function() {
-            let rent = {};
-            let showIndex;
-
-            // 3～10万までは0.5刻みで増加
-            // 10～20万までは1万刻みで増加
-            // 20～50万までは10万刻みで増加
-            rent[`指定なし`] = null;
-            for (
-                let index = this.rentLowerLimit - 0.5;
-                index <= this.rentUpperLimit;
-
-            ) {
-                if (index < 10) {
-                    index += 0.5;
-                } else if (index < 20) {
-                    index += 1;
-                } else {
-                    index += 10;
-                }
-
-                // 10万以下の小数点処理
-                showIndex = index < 10 ? index.toFixed(1) : index;
-                // 万単位を数値に変更して格納
-                rent[`${showIndex}万`] = index * 10000;
-            }
-
-            return rent;
-        }
-    },
     watch: {
+        // 地域選択の値を監視
         "searchValues.area": function() {
             // 地域の選択がなければ、条件の選択ができないように設定
             if (this.searchValues.area.length > 0) {
@@ -307,6 +290,7 @@ export default {
                 this.nextStep = true;
             }
         },
+        // フォーム全体の値を監視
         searchValues: {
             handler: async function() {
                 // 地域未選択時は処理しない
@@ -321,31 +305,20 @@ export default {
                         this.searchValues
                     );
 
-                    let _propertyCount = response.data.propertyCount;
-                    let _optionCounts = response.data.optionCounts;
+                    let updatedPropertyCount = response.data.propertyCount;
+                    let updatedOptionCounts = response.data.optionCounts;
 
                     if (this.propertyCount == "--") {
                         this.propertyCount = 0;
                     }
 
                     // 該当物件のカウントを上下させる
-                    this.countUpDown(this.propertyCount, _propertyCount);
+                    this.countUpDown(this.propertyCount, updatedPropertyCount);
 
                     // オプションの該当件数を更新
-                    // 0件の場合はボタンの無効化
-                    Object.keys(this.rentalPropertyOptions).forEach(key => {
-                        let optionId = this.rentalPropertyOptions[key].id;
-                        if (!_optionCounts[optionId]) {
-                            this.optionCounts[optionId] = 0;
-                            this.optionDisable[optionId] = true;
-                        } else {
-                            this.optionCounts[optionId] =
-                                _optionCounts[optionId];
-                            this.optionDisable[optionId] = false;
-                        }
-                    });
+                    this.optionCountUpdate(updatedOptionCounts);
                 } catch (error) {
-                    console.log(error.response);
+                    this.propertyCount = "--";
                 }
             },
             deep: true
@@ -407,6 +380,74 @@ export default {
                 flag = optionDisable ? true : false;
             }
             return flag;
+        },
+
+        // オプションの該当件数を更新
+        optionCountUpdate: function(updatedOptionCounts) {
+            // 0件 or 該当なしの場合はボタンの無効化
+            Object.keys(this.rentalPropertyOptions).forEach(key => {
+                let optionId = this.rentalPropertyOptions[key].id;
+                if (!updatedOptionCounts[optionId]) {
+                    this.optionCounts[optionId] = 0;
+                    this.optionDisable[optionId] = true;
+                } else {
+                    // 現在選択中のオプションの件数表示は「--」にする
+                    if (this.searchValues.option.includes(optionId)) {
+                        this.optionCounts[optionId] = "--";
+                    }
+                    // 該当件数を入れる
+                    else {
+                        this.optionCounts[optionId] =
+                            updatedOptionCounts[optionId];
+                    }
+                    this.optionDisable[optionId] = false;
+                }
+            });
+        }
+    },
+
+    computed: {
+        // 賃料選択の配列を作成
+        rentArr: function() {
+            let rent = {};
+            let showIndex;
+
+            // 3～10万までは0.5刻みで増加
+            // 10～20万までは1万刻みで増加
+            // 20～50万までは10万刻みで増加
+            rent[`指定なし`] = null;
+            for (
+                let index = this.rentLowerLimit - 0.5;
+                index <= this.rentUpperLimit;
+
+            ) {
+                if (index < 10) {
+                    index += 0.5;
+                } else if (index < 20) {
+                    index += 1;
+                } else {
+                    index += 10;
+                }
+
+                // 10万以下の小数点処理
+                showIndex = index < 10 ? index.toFixed(1) : index;
+                // 万単位を数値に変更して格納
+                rent[`${showIndex}万`] = index * 10000;
+            }
+
+            return rent;
+        },
+
+        step1ActiveCheck: function() {
+            return this.nextStep
+                ? this.classStepHeaderFlag.active
+                : this.classStepHeaderFlag.nonActive;
+        },
+
+        step2ActiveCheck: function() {
+            return !this.nextStep
+                ? this.classStepHeaderFlag.active
+                : this.classStepHeaderFlag.nonActive;
         }
     },
 
