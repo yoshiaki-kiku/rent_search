@@ -169,57 +169,6 @@
     </div>
 </template>
 
-<style scoped>
-.table-head {
-    width: 120px;
-}
-
-.btn-result {
-    font-size: 1.4em;
-    padding: 15px 30px;
-}
-.my-min-width {
-    min-width: 768px;
-}
-.property-count {
-    background-color: #cae7f2;
-    font-weight: bold;
-    font-size: 1.2em;
-    border: 1px solid #208dc3;
-    color: #666;
-}
-.count-num {
-    padding: 0px 6px;
-    font-size: 1.5em;
-    color: #da5019;
-    font-family: "Roboto Mono", monospace;
-}
-.step-header {
-    margin-bottom: 10px;
-}
-.step-header div {
-    font-size: 1.2em;
-    color: #fff;
-    padding: 4px 10px 4px 10px;
-}
-
-.step-header-active {
-    background-color: #a0d3e8;
-}
-
-.step-header-nonactive {
-    background-color: #a3a3a3;
-}
-
-.step-header h2 {
-    margin: 0px;
-    padding: 3px 0px 0px 10px;
-}
-.step-header h2 span {
-    font-size: 0.5em;
-}
-</style>
-
 <script>
 import axios from "axios";
 
@@ -463,3 +412,54 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.table-head {
+    width: 120px;
+}
+
+.btn-result {
+    font-size: 1.4em;
+    padding: 15px 30px;
+}
+.my-min-width {
+    min-width: 768px;
+}
+.property-count {
+    background-color: #cae7f2;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 1px solid #208dc3;
+    color: #666;
+}
+.count-num {
+    padding: 0px 6px;
+    font-size: 1.5em;
+    color: #da5019;
+    font-family: "Roboto Mono", monospace;
+}
+.step-header {
+    margin-bottom: 10px;
+}
+.step-header div {
+    font-size: 1.2em;
+    color: #fff;
+    padding: 4px 10px 4px 10px;
+}
+
+.step-header-active {
+    background-color: #a0d3e8;
+}
+
+.step-header-nonactive {
+    background-color: #a3a3a3;
+}
+
+.step-header h2 {
+    margin: 0px;
+    padding: 3px 0px 0px 10px;
+}
+.step-header h2 span {
+    font-size: 0.5em;
+}
+</style>
