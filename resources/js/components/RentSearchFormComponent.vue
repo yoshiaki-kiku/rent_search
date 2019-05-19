@@ -278,8 +278,8 @@ export default {
                 active: "step-header-active",
                 nonActive: "step-header-nonactive"
             },
-            // カウント中は次のカウント処理を待つために利用
-            countBusy: false
+            // カウントアップ用のsetIntervalの処理終了に利用
+            countTimer: ""
         };
     },
     watch: {
@@ -332,18 +332,11 @@ export default {
     methods: {
         // 該当検討のカウントアップダウンのアニメーション
         countUpDown: function(fromNum, toNum) {
-            // カウント処理の最大時間
-            const MAX_DURATION = 1000;
-
-            // カウント処理中は1秒待って再度この関数を実行させる
-            // フォーム条件と表示の件数が合致しないことを防ぐ
-            if (this.countBusy) {
-                this.countBusy = false;
-                setTimeout(this.countUpDown(fromNum, toNum), MAX_DURATION);
+            // 現在のカウントアップを処理をクリアする
+            if (this.countTimer) {
+                clearInterval(this.countTimer);
             }
 
-            // カウント処理中に設定
-            this.countBusy = true;
             // どのくらい時間をかけてカウントするか
             let count_duration;
             const startTime = Date.now();
@@ -355,10 +348,10 @@ export default {
             } else if (rangeChange < 100) {
                 count_duration = 500;
             } else {
-                count_duration = MAX_DURATION;
+                count_duration = 1000;
             }
 
-            const timer = setInterval(() => {
+            this.countTimer = setInterval(() => {
                 // 現在の経過時間
                 const elapsedTime = Date.now() - startTime;
                 // 処理
@@ -373,8 +366,7 @@ export default {
                     // 地域選択をしているか再確認する
                     this.propertyCount =
                         this.searchValues.area.length > 0 ? toNum : "--";
-                    this.countBusy = false;
-                    clearInterval(timer);
+                    clearInterval(this.countTimer);
                 }
                 // intervalの数値を大きくすれば緩やかな見え方になる
             }, 16);
