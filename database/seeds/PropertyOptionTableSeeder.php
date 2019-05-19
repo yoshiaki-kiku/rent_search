@@ -20,8 +20,9 @@ class PropertyOptionTableSeeder extends Seeder
         $faker = Faker::create("ja_JP");
 
         // オプションの最大数
-        $maxNumberOfOptions = 8;
+        $maxNumberOfOptions = 16;
         // option一覧
+        // 1から16の整数のコレクションを作る
         $optionList = collect(range(1, $maxNumberOfOptions));
 
         $properties = RentalProperty::all();

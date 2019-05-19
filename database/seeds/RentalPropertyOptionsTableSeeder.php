@@ -22,6 +22,14 @@ class RentalPropertyOptionsTableSeeder extends Seeder
             "南向き",
             "オートロック",
             "都市ガス",
+            "タワーマンション",
+            "オール電化",
+            "エレベーター",
+            "防犯カメラ",
+            "宅配ボックス",
+            "オートロック",
+            "浴室乾燥機",
+            "システムキッチン",
         ];
 
         foreach ($options as $value) {

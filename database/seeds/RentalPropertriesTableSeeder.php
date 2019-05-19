@@ -11,6 +11,6 @@ class RentalPropertriesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\RentalProperty::class, 300)->create();
+        factory(App\Models\RentalProperty::class, 3000)->create();
     }
 }
