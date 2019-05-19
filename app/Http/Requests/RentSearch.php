@@ -40,16 +40,5 @@ class RentSearch extends FormRequest
             'option' => "array",
             'option.*' => "integer",
         ];
-        // return [
-        //     'area' => "required|array",
-        //     'area.*' => "integer",
-        //     'rent_lower_limit' => "integer|between:{$lower},{$upper}",
-        //     'rent_upper_limit' => "integer|between:{$lower},{$upper}",
-        //     'floor_plan' => "array",
-        //     'floor_plan.*' => "integer",
-        //     'age' => "integer",
-        //     'option' => "array",
-        //     'option.*' => "integer",
-        // ];
     }
 }
