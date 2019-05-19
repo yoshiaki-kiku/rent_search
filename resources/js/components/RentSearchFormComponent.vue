@@ -6,7 +6,7 @@
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form>
                 <div class="d-flex align-items-center step-header">
-                    <div :class="step1ActiveCheck">ステップ1</div>
+                    <div class="step-header-active">ステップ1</div>
                     <h2>地域の選択 <span>(複数選択可)</span></h2>
                 </div>
                 <ul class="row">
@@ -277,7 +277,9 @@ export default {
             classStepHeaderFlag: {
                 active: "step-header-active",
                 nonActive: "step-header-nonactive"
-            }
+            },
+            // カウント中は次のカウント処理を待つために利用
+            countBusy: false
         };
     },
     watch: {
@@ -293,7 +295,7 @@ export default {
         // フォーム全体の値を監視
         searchValues: {
             handler: async function() {
-                // 地域未選択時は処理しない
+                // 地域未選択時は処理しない;
                 if (this.searchValues.area.length < 1) {
                     this.propertyCount = "--";
                     return;
@@ -318,6 +320,8 @@ export default {
                     // オプションの該当件数を更新
                     this.optionCountUpdate(updatedOptionCounts);
                 } catch (error) {
+                    console.log("エラー");
+                    console.log(this.searchValues.area);
                     this.propertyCount = "--";
                 }
             },
@@ -328,20 +332,30 @@ export default {
     methods: {
         // 該当検討のカウントアップダウンのアニメーション
         countUpDown: function(fromNum, toNum) {
+            // カウント処理の最大時間
+            const MAX_DURATION = 1000;
+
+            // カウント処理中は1秒待って再度この関数を実行させる
+            // フォーム条件と表示の件数が合致しないことを防ぐ
+            if (this.countBusy) {
+                this.countBusy = false;
+                setTimeout(this.countUpDown(fromNum, toNum), MAX_DURATION);
+            }
+
+            // カウント処理中に設定
+            this.countBusy = true;
             // どのくらい時間をかけてカウントするか
             let count_duration;
             const startTime = Date.now();
             const rangeChange = Math.abs(toNum - fromNum);
 
-            // 変動幅が小さい数値ではカウント期間を短くする
+            // 変動幅が小さい数値ではカウント時間を短くする
             if (rangeChange < 10) {
                 count_duration = 100;
             } else if (rangeChange < 100) {
                 count_duration = 500;
-            } else if (rangeChange < 500) {
-                count_duration = 1000;
             } else {
-                count_duration = 2000;
+                count_duration = MAX_DURATION;
             }
 
             const timer = setInterval(() => {
@@ -356,7 +370,10 @@ export default {
                         fromNum + progress * (toNum - fromNum)
                     );
                 } else {
-                    this.propertyCount = toNum;
+                    // 地域選択をしているか再確認する
+                    this.propertyCount =
+                        this.searchValues.area.length > 0 ? toNum : "--";
+                    this.countBusy = false;
                     clearInterval(timer);
                 }
                 // intervalの数値を大きくすれば緩やかな見え方になる
@@ -436,12 +453,6 @@ export default {
             }
 
             return rent;
-        },
-
-        step1ActiveCheck: function() {
-            return this.nextStep
-                ? this.classStepHeaderFlag.active
-                : this.classStepHeaderFlag.nonActive;
         },
 
         step2ActiveCheck: function() {
