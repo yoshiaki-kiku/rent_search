@@ -28,8 +28,8 @@ class PropertyOptionTableSeeder extends Seeder
         $properties = RentalProperty::all();
 
         foreach ($properties as $property) {
-            // オプションを何個設定するかランダム
-            $numberOfOptions = $faker->numberBetween(1, $maxNumberOfOptions);
+            // オプションを何個設定するか
+            $numberOfOptions = $faker->numberBetween(1, 7);
             // 設定するオプションをランダムで選択
             $options = $optionList->random($numberOfOptions)->all();
 
