@@ -4,4 +4,5 @@
 return [
     'rentLowerLimit' => 30000,
     'rentUpperLimit' => 600000,
+    "paginationNum" => 10,
 ];

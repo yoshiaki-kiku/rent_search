@@ -6,7 +6,18 @@
     <h1>賃貸物件を探す</h1>
 </div>
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+
+@endif
 <rent-search-form-component
+    action-url="{{ route('search.result') }}"
     v-bind:init-area-property-count="{{ $areaPropertyCount }}"
     v-bind:init-rental-floor-plans="{{ $rentalFloorPlans }}"
     v-bind:init-rental-areas="{{ $rentalAreas }}"

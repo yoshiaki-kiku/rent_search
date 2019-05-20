@@ -6,5 +6,9 @@
     <h1>検索結果</h1>
 </div>
 
+@foreach ($properties as $property)
+{{ $property->adress }}
+@endforeach
+
 
 @endsection

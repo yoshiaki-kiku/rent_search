@@ -9,7 +9,6 @@ use App\Models\RentalProperty;
 use App\Http\Requests\RentSearch;
 use Log;
 
-
 class RentSearchController extends Controller
 {
     public function index()
@@ -40,8 +39,6 @@ class RentSearchController extends Controller
      */
     public function propertyCount(RentSearch $request)
     {
-        Log::debug($request);
-
         $rentalPropertyModel = new RentalProperty();
         $query = $rentalPropertyModel->getPropertyQueryBuild($request);
 
@@ -54,5 +51,24 @@ class RentSearchController extends Controller
             "propertyCount" => $count,
             "optionCounts" => $optionCounts
         ];
+    }
+
+    /**
+     * 賃貸検索の結果を表示
+     *
+     * @param RentSearch $request
+     * @return void
+     */
+    public function searchResult(RentSearch $request)
+    {
+        // Log::debug($request);
+
+        $rentalPropertyModel = new RentalProperty();
+        $query = $rentalPropertyModel->getPropertyQueryBuild($request);
+        $properties = $query->paginate(config("rentsearch.paginationNum"));
+
+        return view("search_result", [
+            "properties" => $properties,
+        ]);
     }
 }

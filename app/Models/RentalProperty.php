@@ -30,7 +30,6 @@ class RentalProperty extends Model
         )->groupBy("area")->get();
 
         foreach ($getArr as $value) {
-            Log::debug($value->area);
             $areaCounts[$value->area] = $value->area_count;
         }
 
@@ -48,7 +47,6 @@ class RentalProperty extends Model
      */
     public function getPropertyQueryBuild($request)
     {
-        Log::debug($request);
 
         $query = RentalProperty::query();
 

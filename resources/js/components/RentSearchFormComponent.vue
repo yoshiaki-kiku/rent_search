@@ -4,7 +4,15 @@
             該当物件 <span class="count-num">{{ propertyCount }}</span> 件
         </div>
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
-            <form>
+            <form
+                :action="actionUrl"
+                method="post"
+            >
+                <input
+                    type="hidden"
+                    name="_token"
+                    :value="csrf"
+                >
                 <div class="d-flex align-items-center step-header">
                     <div class="step-header-active">ステップ1</div>
                     <h2>地域の選択 <span>(複数選択可)</span></h2>
@@ -17,7 +25,7 @@
                     >
                         <input
                             type="checkbox"
-                            name="rental_area"
+                            name="area[]"
                             :value="rentalArea.id"
                             class="form-check-input"
                             v-model="searchValues.area"
@@ -86,7 +94,7 @@
                                     >
                                         <input
                                             type="checkbox"
-                                            name="floor_plan"
+                                            name="floor_plan[]"
                                             :value="rentalFloorPlan.id"
                                             v-model="searchValues.floor_plan"
                                             class="form-check-input"
@@ -142,7 +150,7 @@
                                     >
                                         <input
                                             type="checkbox"
-                                            name="option"
+                                            name="option[]"
                                             :value="option.id"
                                             class="form-check-input"
                                             :id="'option' + option.id"
@@ -174,6 +182,7 @@ import axios from "axios";
 
 export default {
     props: {
+        actionUrl: String,
         initAreaPropertyCount: Object,
         initRentalAreas: Array,
         initRentalFloorPlans: Array,
@@ -181,6 +190,9 @@ export default {
     },
     data: function() {
         return {
+            csrf: document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content"),
             // 地域ごとの物件数
             areaPropertyCount: this.initAreaPropertyCount,
             // 地域
