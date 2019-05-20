@@ -165,7 +165,12 @@
                     </tbody>
                 </table>
                 <div class="text-center">
-                    <button class="btn btn-primary btn-result">検索結果を見る</button>
+                    <button
+                        class="btn btn-primary btn-result"
+                        :disabled="nextStep"
+                    >
+                        検索結果を見る
+                    </button>
                 </div>
             </form>
         </div>

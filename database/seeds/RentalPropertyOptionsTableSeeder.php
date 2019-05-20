@@ -27,7 +27,7 @@ class RentalPropertyOptionsTableSeeder extends Seeder
             "エレベーター",
             "防犯カメラ",
             "宅配ボックス",
-            "オートロック",
+            "保証人不要",
             "浴室乾燥機",
             "システムキッチン",
         ];
