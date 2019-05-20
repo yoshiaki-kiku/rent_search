@@ -35,7 +35,14 @@
                 </tr>
                 <tr>
                     <td class="my-bg-secondary">築年数 / 間取り</td>
-                    <td>{{ $property->age }}年 / {{ $property->rentalFloorPlan->name }}</td>
+                    <td>
+                        @if ($property->age == 0)
+                        新築
+                        @else
+                        {{ $property->age }}年
+                        @endif
+                        / {{ $property->rentalFloorPlan->name }}
+                    </td>
                 </tr>
                 <tr>
                     <td class="my-bg-secondary">オプション</td>
