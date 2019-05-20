@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="property-count container mb-3 p-2 text-center sticky-top my-min-width">
-            該当物件 <span class="count-num">{{ propertyCount }}</span> 件
+            該当物件 <span class="count-num">{{ propertyCountForDisplay }}</span> 件
         </div>
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form
@@ -227,7 +227,10 @@ export default {
                 option: []
             },
             // 該当物件数
-            propertyCount: "--",
+            // カウント変動時に影響を受けないように
+            // 表示用と固定で分ける
+            propertyCountForDisplay: "--",
+            propertyCount: 0,
             // オプションの該当件数
             optionCounts: [],
             // フォームの有効無効
@@ -239,8 +242,9 @@ export default {
                 active: "step-header-active",
                 nonActive: "step-header-nonactive"
             },
-            // カウントアップ用のsetIntervalの処理終了に利用
-            countTimer: ""
+            // 連続処理を避けるため
+            // 処理を溜めて最後のものを実行
+            processChunks: []
         };
     },
     watch: {
@@ -256,35 +260,46 @@ export default {
         // フォーム全体の値を監視
         searchValues: {
             handler: async function() {
-                // 地域未選択時は処理しない;
-                if (this.searchValues.area.length < 1) {
-                    this.propertyCount = "--";
+                // 連続処理を避ける
+                // 現在の保持している処理と、
+                // 0.3秒後の保持している処理数が同じ場合のみ
+                // 1連の操作の確定処理とみなして処理開始
+                this.processChunks.unshift(this.searchValues);
+                let processChunksCount = this.processChunks.length;
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                // 処理キャンセル
+                if (this.processChunks.length != processChunksCount) {
                     return;
                 }
 
-                try {
-                    const response = await axios.post(
-                        "/property_count",
-                        this.searchValues
-                    );
+                // 保持している処理のリセット
+                this.processChunks = [];
 
-                    let updatedPropertyCount = response.data.propertyCount;
-                    let updatedOptionCounts = response.data.optionCounts;
-
-                    if (this.propertyCount == "--") {
-                        this.propertyCount = 0;
-                    }
-
-                    // 該当物件のカウントを上下させる
-                    this.countUpDown(this.propertyCount, updatedPropertyCount);
-
-                    // オプションの該当件数を更新
-                    this.optionCountUpdate(updatedOptionCounts);
-                } catch (error) {
-                    console.log("エラー");
-                    console.log(this.searchValues.area);
-                    this.propertyCount = "--";
+                // 地域未選択時は処理しない;
+                if (this.searchValues.area.length < 1) {
+                    this.countReset();
+                    return;
                 }
+
+                // 該当物件の件数を取得
+                const response = await axios
+                    .post("/property_count", this.searchValues)
+                    .catch(err => {
+                        this.countReset();
+                    });
+
+                let updatedPropertyCount = response.data.propertyCount;
+                let updatedOptionCounts = response.data.optionCounts;
+
+                // 表示の該当物件のカウントを上下させる
+                this.countUpDown(this.propertyCount, updatedPropertyCount);
+                // 現在値を更新
+                this.propertyCount = updatedPropertyCount;
+
+                // オプションの該当件数を更新
+                this.optionCountUpdate(updatedOptionCounts);
             },
             deep: true
         }
@@ -293,11 +308,6 @@ export default {
     methods: {
         // 該当検討のカウントアップダウンのアニメーション
         countUpDown: function(fromNum, toNum) {
-            // 現在のカウントアップを処理をクリアする
-            if (this.countTimer) {
-                clearInterval(this.countTimer);
-            }
-
             // どのくらい時間をかけてカウントするか
             let count_duration;
             const startTime = Date.now();
@@ -312,7 +322,7 @@ export default {
                 count_duration = 1000;
             }
 
-            this.countTimer = setInterval(() => {
+            let countTimer = setInterval(() => {
                 // 現在の経過時間
                 const elapsedTime = Date.now() - startTime;
                 // 処理
@@ -320,14 +330,17 @@ export default {
 
                 // 指定期間以下は処理を続ける
                 if (progress < 1) {
-                    this.propertyCount = Math.floor(
+                    this.propertyCountForDisplay = Math.floor(
                         fromNum + progress * (toNum - fromNum)
                     );
                 } else {
                     // 地域選択をしているか再確認する
-                    this.propertyCount =
-                        this.searchValues.area.length > 0 ? toNum : "--";
-                    clearInterval(this.countTimer);
+                    if (this.searchValues.area.length > 0) {
+                        this.propertyCountForDisplay = toNum;
+                    } else {
+                        this.countReset();
+                    }
+                    clearInterval(countTimer);
                 }
                 // intervalの数値を大きくすれば緩やかな見え方になる
             }, 16);
@@ -412,6 +425,11 @@ export default {
             return !this.nextStep
                 ? this.classStepHeaderFlag.active
                 : this.classStepHeaderFlag.nonActive;
+        },
+
+        countReset: function() {
+            this.propertyCountForDisplay = "--";
+            this.propertyCount = 0;
         }
     },
 

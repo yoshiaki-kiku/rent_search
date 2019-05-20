@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -12,17 +12,17 @@ const mix = require('laravel-mix');
  */
 
 mix.version()
-    .extract()    // JSで3ソース出力、キャッシュの有効活用ができる
+    .extract() // JSで3ソース出力、キャッシュの有効活用ができる
     .sourceMaps() // 開発用のソースマップ
-    .js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', '../resources/assets/build/css/')
-    .sass('resources/sass/base.scss', '../resources/assets/build/css/')
+    .js("resources/js/app.js", "public/js")
+    .sass("resources/sass/app.scss", "../resources/assets/build/css/")
+    .sass("resources/sass/base.scss", "../resources/assets/build/css/")
     // buildディレクトリに出力したcssファイルを、
     // app.cssというファイルに１つにまとめてpublicディレクトリへ出力する
     .styles(
         [
-            'resources/assets/build/css/app.css',
-            'resources/assets/build/css/base.css'
+            "resources/assets/build/css/app.css",
+            "resources/assets/build/css/base.css"
         ],
-        'public/css/app.css'
+        "public/css/app.css"
     );
