@@ -10672,3 +10672,7 @@ a.text-dark:focus {
   border: 3px solid #bec8ca;
 }
 
+.container {
+  min-width: 768px;
+}
+

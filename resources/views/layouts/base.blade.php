@@ -15,7 +15,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-dark bg-secondary">
-            <a class="navbar-brand" href="#!">賃貸検索</a>
+            <a class="navbar-brand" href="{{ route('home') }}">賃貸検索</a>
         </nav>
 
         @yield('content')

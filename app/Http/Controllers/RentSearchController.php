@@ -61,14 +61,20 @@ class RentSearchController extends Controller
      */
     public function searchResult(RentSearch $request)
     {
-        // Log::debug($request);
+        $rentalPropertyOption = new RentalPropertyOption();
+        $optionList = $rentalPropertyOption->getOptionArr();
 
         $rentalPropertyModel = new RentalProperty();
         $query = $rentalPropertyModel->getPropertyQueryBuild($request);
+        $query = $query->with(["rentalArea", "rentalFloorPlan"]);
+        $propertyCount = $query->count();
         $properties = $query->paginate(config("rentsearch.paginationNum"));
 
         return view("search_result", [
             "properties" => $properties,
+            "optionList" => $optionList,
+            "propertyCount" => $propertyCount,
+            "query" => $request->query(),
         ]);
     }
 }

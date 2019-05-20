@@ -13,4 +13,4 @@
 
 Route::get('/', "RentSearchController@index")->name("home");
 Route::post('/property_count', "RentSearchController@propertyCount")->name("property.count");
-Route::post('/search_result', "RentSearchController@searchResult")->name("search.result");
+Route::get('/search_result', "RentSearchController@searchResult")->name("search.result");

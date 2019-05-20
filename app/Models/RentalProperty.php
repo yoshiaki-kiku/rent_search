@@ -13,6 +13,15 @@ class RentalProperty extends Model
         return $this->belongsToMany('App\Models\RentalPropertyOption', "property_option");
     }
 
+    public function rentalArea()
+    {
+        return $this->belongsTo("App\Models\RentalArea");
+    }
+
+    public function rentalFloorPlan()
+    {
+        return $this->belongsTo("App\Models\RentalFloorPlan");
+    }
 
     /**
      * 地域ごとの物件数を取得する
@@ -25,12 +34,12 @@ class RentalProperty extends Model
         $areaCounts = [];
 
         $getArr = RentalProperty::query()->select(
-            "area",
+            "rental_area_id",
             DB::raw("count(*) as area_count")
-        )->groupBy("area")->get();
+        )->groupBy("rental_area_id")->get();
 
         foreach ($getArr as $value) {
-            $areaCounts[$value->area] = $value->area_count;
+            $areaCounts[$value->rental_area_id] = $value->area_count;
         }
 
         return collect($areaCounts);
@@ -68,7 +77,7 @@ class RentalProperty extends Model
         // ------------------------------------
         if (!empty($request->area)) {
             $query = $query
-                ->whereIN("area", $request->area);
+                ->whereIN("rental_area_id", $request->area);
         }
 
         // ------------------------------------
@@ -104,7 +113,7 @@ class RentalProperty extends Model
         // 間取り
         if (!empty($request->floor_plan)) {
             $query = $query
-                ->whereIN("floor_plan", $request->floor_plan);
+                ->whereIN("rental_floor_plan_id", $request->floor_plan);
         }
 
         // 築年数
@@ -161,5 +170,11 @@ class RentalProperty extends Model
         }
 
         return $counts;
+    }
+
+    public function getOptionListAttribute($value)
+    {
+        $value = explode(",", $value);
+        return $value;
     }
 }

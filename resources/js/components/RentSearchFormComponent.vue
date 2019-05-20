@@ -6,13 +6,8 @@
         <div class="container mt-2 mb-4 p-4 bg-white border shadow my-min-width">
             <form
                 :action="actionUrl"
-                method="post"
+                method="get"
             >
-                <input
-                    type="hidden"
-                    name="_token"
-                    :value="csrf"
-                >
                 <div class="d-flex align-items-center step-header">
                     <div class="step-header-active">ステップ1</div>
                     <h2>地域の選択 <span>(複数選択可)</span></h2>
@@ -190,9 +185,6 @@ export default {
     },
     data: function() {
         return {
-            csrf: document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content"),
             // 地域ごとの物件数
             areaPropertyCount: this.initAreaPropertyCount,
             // 地域
@@ -386,6 +378,11 @@ export default {
                     this.optionDisable[optionId] = false;
                 }
             });
+        },
+
+        countReset: function() {
+            this.propertyCountForDisplay = "--";
+            this.propertyCount = 0;
         }
     },
 
@@ -425,11 +422,6 @@ export default {
             return !this.nextStep
                 ? this.classStepHeaderFlag.active
                 : this.classStepHeaderFlag.nonActive;
-        },
-
-        countReset: function() {
-            this.propertyCountForDisplay = "--";
-            this.propertyCount = 0;
         }
     },
 
@@ -451,9 +443,6 @@ export default {
 .btn-result {
     font-size: 1.4em;
     padding: 15px 30px;
-}
-.my-min-width {
-    min-width: 768px;
 }
 .property-count {
     background-color: #cae7f2;

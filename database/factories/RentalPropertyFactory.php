@@ -71,9 +71,9 @@ $factory->define(RentalProperty::class, function (Faker $faker) {
 
     return [
         'adress' => "北海道札幌市ダミー住所55-55-55",
-        "area" => $faker->randomElement($areaArr),
+        "rental_area_id" => $faker->randomElement($areaArr),
         "rent" => $rent,
-        "floor_plan" => $floorPlanArr[$floorPlanName],
+        "rental_floor_plan_id" => $floorPlanArr[$floorPlanName],
         "age" => $faker->numberBetween(0, 35),
         "created_at" => $date,
         "updated_at" => $date,
