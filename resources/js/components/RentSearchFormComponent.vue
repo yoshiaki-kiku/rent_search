@@ -179,6 +179,12 @@
 
 <script>
 import axios from "axios";
+import {
+    getSearchValueFromCookie,
+    setSearchValueInCookie,
+    deleteCookie,
+    getCookieValue
+} from "../cookie";
 
 export default {
     props: {
@@ -241,7 +247,9 @@ export default {
             },
             // 連続処理を避けるため
             // 処理を溜めて最後のものを実行
-            processChunks: []
+            processChunks: [],
+            //初期化時の処理フラグ
+            init: false
         };
     },
     watch: {
@@ -291,9 +299,19 @@ export default {
                 let updatedOptionCounts = response.data.optionCounts;
 
                 // 表示の該当物件のカウントを上下させる
-                this.countUpDown(this.propertyCount, updatedPropertyCount);
+                // 初期化時はカウント処理を飛ばす
+                if (this.init) {
+                    this.propertyCountForDisplay = updatedPropertyCount;
+                    this.init = false;
+                } else {
+                    this.countUpDown(this.propertyCount, updatedPropertyCount);
+                }
+
                 // 現在値を更新
                 this.propertyCount = updatedPropertyCount;
+
+                // クッキーに保存(ブラウザ履歴移動の時のため)
+                setSearchValueInCookie(this.searchValues);
 
                 // オプションの該当件数を更新
                 this.optionCountUpdate(updatedOptionCounts);
@@ -431,11 +449,23 @@ export default {
     },
 
     created() {
-        this.allOptionDisable();
-    },
+        if (window.performance) {
+            // 履歴を辿る操作をした場合
+            if (performance.navigation.type === 2) {
+                // 初期化処理をする
+                // 対応するcookieがあれば初期値にする
+                this.init = true;
+                this.searchValues = getSearchValueFromCookie(this.searchValues);
+            }
+            // リロードなどでクッキーを削除
+            // リロード時は初期化処理もfalseにする
+            else {
+                deleteCookie();
+                this.init = false;
+            }
+        }
 
-    mounted() {
-        console.log(this.rentalPropertyOptions);
+        this.allOptionDisable();
     }
 };
 </script>
