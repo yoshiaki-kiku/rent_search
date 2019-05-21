@@ -42,6 +42,8 @@ class CreatePropertyOptionTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('property_option');
+        Schema::enableForeignKeyConstraints();
     }
 }
