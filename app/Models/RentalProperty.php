@@ -39,6 +39,7 @@ class RentalProperty extends Model
         )->groupBy("rental_area_id")->get();
 
         foreach ($getArr as $value) {
+            Log::info(gettype($value->area_count));
             $areaCounts[$value->rental_area_id] = $value->area_count;
         }
 
