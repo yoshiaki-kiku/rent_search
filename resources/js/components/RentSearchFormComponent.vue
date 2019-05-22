@@ -189,6 +189,7 @@ import {
 export default {
     props: {
         actionUrl: String,
+        countUrl: String,
         initAreaPropertyCount: Object,
         initRentalAreas: Array,
         initRentalFloorPlans: Array,
@@ -290,7 +291,7 @@ export default {
 
                 // 該当物件の件数を取得
                 const response = await axios
-                    .post("/property_count", this.searchValues)
+                    .post(this.countUrl, this.searchValues)
                     .catch(err => {
                         this.countReset();
                     });

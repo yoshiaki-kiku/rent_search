@@ -8,6 +8,7 @@
 
 <rent-search-form-component
     action-url="{{ route('search.result') }}"
+    count-url="{{ route('property.count') }}"
     v-bind:init-area-property-count="{{ $areaPropertyCount }}"
     v-bind:init-rental-floor-plans="{{ $rentalFloorPlans }}"
     v-bind:init-rental-areas="{{ $rentalAreas }}"
