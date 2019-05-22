@@ -386,7 +386,11 @@ export default {
             // 0件 or 該当なしの場合はボタンの無効化
             Object.keys(this.rentalPropertyOptions).forEach(key => {
                 let optionId = this.rentalPropertyOptions[key].id;
-                if (!updatedOptionCounts[optionId]) {
+                // 該当するオプションの値がなければ0件にする
+                if (
+                    !updatedOptionCounts[optionId] ||
+                    updatedOptionCounts[optionId] == "0"
+                ) {
                     this.optionCounts[optionId] = 0;
                     this.optionDisable[optionId] = true;
                 } else {
@@ -465,7 +469,9 @@ export default {
                 this.init = false;
             }
         }
+    },
 
+    mounted() {
         this.allOptionDisable();
     }
 };
