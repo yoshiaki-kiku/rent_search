@@ -39,8 +39,7 @@ class RentalProperty extends Model
         )->groupBy("rental_area_id")->get();
 
         foreach ($getArr as $value) {
-            Log::info(gettype($value->area_count));
-            $areaCounts[$value->rental_area_id] = $value->area_count;
+            $areaCounts[$value->rental_area_id] = (int)$value->area_count;
         }
 
         return collect($areaCounts);
@@ -169,7 +168,7 @@ class RentalProperty extends Model
         $gets = json_decode(json_encode($gets), true);
         foreach ($gets as  $key => $value) {
             $key = str_replace("id_", "", $key);
-            $counts[$key] = $value;
+            $counts[$key] = (int)$value;
         }
 
         return $counts;
